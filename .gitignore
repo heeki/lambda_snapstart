@@ -1,0 +1,10 @@
+# directories
+.mvn
+etc
+target
+tmp
+
+# files
+iac/*_output.yaml
+notes.md
+mvnw
