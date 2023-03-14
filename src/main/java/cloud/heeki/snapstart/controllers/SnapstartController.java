@@ -1,4 +1,4 @@
-package cloud.heeki.snapstart.lib;
+package cloud.heeki.snapstart.controllers;
 
 import cloud.heeki.snapstart.lib.Customer;
 import cloud.heeki.snapstart.lib.DynamoAdapter;
