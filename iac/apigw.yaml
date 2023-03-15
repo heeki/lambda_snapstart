@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Spring Boot project to test SnapStart
-Transform: AWS::Serverless-2016-10-31
+Transform:
+  - AWS::LanguageExtensions
+  - AWS::Serverless-2016-10-31
 Globals:
   Api:
     OpenApiVersion: 3.0.1
@@ -104,8 +106,8 @@ Resources:
       AutoPublishAliasAllProperties: true
       DeploymentPreference:
         Type: AllAtOnce
-      # SnapStart:
-      #   ApplyOn: !Ref pSnapStartApplyOn
+      SnapStart:
+        ApplyOn: !Ref pSnapStartApplyOn
   FnLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
