@@ -17,7 +17,9 @@ Parameters:
     Type: Number
   pFnTimeout:
     Type: Number
-  pFnVersion:
+  pFnAliasName:
+    Type: String
+  pSnapStartApplyOn:
     Type: String
   pTableArn:
     Type: String
@@ -29,6 +31,12 @@ Resources:
       AccessLogSetting:
         DestinationArn: !GetAtt ApiLogGroup.Arn
         Format: '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod","routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength", "auth.status":"$context.authorizer.status", "auth.error":"$context.authorizer.error", "auth.token":"$context.authorizer.token", "auth.reason":"$context.authorizer.reason", "auth.simple":"$context.authorizer.simple", "auth.pversion":"$context.authorizer.pversion" }'
+      MethodSettings:
+        - HttpMethod: '*'
+          LoggingLevel: INFO
+          ResourcePath: '/*'
+          MetricsEnabled: true
+          DataTraceEnabled: true
       StageName: !Ref pApiStage
       DefinitionBody:
         Fn::Transform:
@@ -92,9 +100,12 @@ Resources:
       CodeUri: ../target/snapstart-0.0.1-SNAPSHOT.jar
       Handler: cloud.heeki.snapstart.SnapstartHandler::handleRequest
       Role: !GetAtt FnRole.Arn
-      AutoPublishAlias: live
+      AutoPublishAlias: !Ref pFnAliasName
+      AutoPublishAliasAllProperties: true
       DeploymentPreference:
         Type: AllAtOnce
+      # SnapStart:
+      #   ApplyOn: !Ref pSnapStartApplyOn
   FnLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -103,12 +114,16 @@ Resources:
   FnPerm:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt Fn.Arn
+      FunctionName: !Sub '${Fn.Arn}:${pFnAliasName}'
       Principal: apigateway.amazonaws.com
       Action: lambda:InvokeFunction
       SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*'
 Outputs:
   outApi:
     Value: !Ref Api
+  outApiEndpoint:
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${pApiStage}'
   outFn:
     Value: !Ref Fn
+  outFnArn:
+    Value: !GetAtt Fn.Arn

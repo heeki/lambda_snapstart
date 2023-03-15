@@ -24,8 +24,6 @@ paths:
           $ref: '#/components/responses/error'
         default:
           description: ok
-      security:
-        - unicorn-api-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: POST
         payloadFormatVersion: "2.0"
@@ -34,7 +32,7 @@ paths:
             statusCode: 200
         type: aws_proxy
         uri:
-          Fn::Sub: 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Fn.Arn}:${pFnVersion}/invocations'
+          Fn::Sub: 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Fn.Arn}:${pFnAliasName}/invocations'
     post:
       summary: customer
       description: create customer
@@ -43,8 +41,6 @@ paths:
           description: ok
         default:
           description: error
-      security:
-        - unicorn-api-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: POST
         payloadFormatVersion: "2.0"
@@ -53,7 +49,7 @@ paths:
             statusCode: 200
         type: aws_proxy
         uri:
-          Fn::Sub: 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Fn.Arn}:${pFnVersion}/invocations'
+          Fn::Sub: 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Fn.Arn}:${pFnAliasName}/invocations'
   /customer/{proxy+}:
     delete:
       summary: customer
@@ -72,8 +68,6 @@ paths:
           $ref: '#/components/responses/error'
         default:
           $ref: '#/components/responses/error'
-      security:
-        - unicorn-api-authorizer: []
       x-amazon-apigateway-integration:
         httpMethod: POST
         payloadFormatVersion: "2.0"
@@ -82,4 +76,4 @@ paths:
             statusCode: 200
         type: aws_proxy
         uri:
-          Fn::Sub: 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Fn.Arn}:${pFnVersion}/invocations'
+          Fn::Sub: 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Fn.Arn}:${pFnAliasName}/invocations'
