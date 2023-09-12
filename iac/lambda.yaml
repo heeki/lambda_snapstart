@@ -108,12 +108,16 @@ Resources:
         Type: AllAtOnce
       SnapStart:
         ApplyOn: !Ref pSnapStartApplyOn
+      Environment:
+        Variables:
+          TABLE: !Select [1, !Split ["/", !Ref pTableArn]]
   FnLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${Fn}"
       RetentionInDays: 7
   FnPerm:
+    DependsOn: FnAliaslive
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName: !Sub '${Fn.Arn}:${pFnAliasName}'

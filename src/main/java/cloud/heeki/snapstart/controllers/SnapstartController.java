@@ -28,8 +28,13 @@ public class SnapstartController {
 
     SnapstartController() {
         // initialization: client
+        // String t = props.getProperty("table.name")
+        String t = System.getenv("TABLE");
+        String table = (t != null) ? t : "undefined";
+        this.da = new DynamoAdapter(table);
+
+        props.setProperty("table", table);
         System.out.println(g.toJson(this.props));
-        this.da = new DynamoAdapter(props.getProperty("table.name"));
 
         // initialization: read from dynamodb
         for (ScanResponse page : da.scan()) {
